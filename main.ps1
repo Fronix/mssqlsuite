@@ -26,9 +26,9 @@ if ("sqlengine" -in $Install) {
       ((Get-Content $profile) -replace 'export ','$env:') | Set-Content $profile
       . $profile
       docker-machine stop default
-      VBoxManage modifyvm "default" --natpf1 "mssql,tcp,,1433,,1433"
+      VBoxManage modifyvm "default" --natpf1 "mssql,tcp,,$($env:Port),,1433"
       docker-machine start default
-      docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$SaPassword" --name sql -p 1433:1433 --memory="2g" -d mcr.microsoft.com/mssql/server:2019-latest
+      docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$SaPassword" --name sql -p "$($env:Port):1433" --memory="2g" -d mcr.microsoft.com/mssql/server:2019-latest
       Write-Output "Docker finished running"
       Start-Sleep 5
       if ($ShowLog) {
@@ -44,7 +44,7 @@ if ("sqlengine" -in $Install) {
 
    if ($islinux) {
       Write-Output "linux detected, downloading the 2019 docker container"
-      docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$SaPassword" --name sql -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+      docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$SaPassword" --name sql -p "$($env:Port):1433" -d mcr.microsoft.com/mssql/server:2019-latest
       Write-Output "Waiting for docker to start"
       Start-Sleep -Seconds 10
       
@@ -57,6 +57,9 @@ if ("sqlengine" -in $Install) {
 
    if ($iswindows) {
       Write-Output "windows detected, downloading sql server 2019"
+      if($Port) {
+         Write-Output "Custom ports not supported on windows"
+      }
       # docker takes 16 minutes, this takes 5 minutes
       if (-not (Test-Path C:\temp)) {
          mkdir C:\temp

@@ -15,6 +15,10 @@ inputs:
     description: "Show the log file for the docker container"
     required: false
     default: "false"
+  port:
+    description: "Provide custom port (linux, macos only)"
+    required: false
+    default: "1433"
 runs:
   using: "composite"
   steps:
@@ -32,6 +36,7 @@ runs:
             Install         = ("${{ inputs.install }}" -split ",").Trim()
             SaPassword      = "${{ inputs.sa-password }}"
             ShowLog         = $${{ inputs.show-log }}
+            Port            = "${{ inputs.port }}"  
         }
 
         ${{ github.action_path }}/main.ps1 @params
