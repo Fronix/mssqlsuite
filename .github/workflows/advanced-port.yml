@@ -21,4 +21,4 @@ jobs:
           port: "1436"
 
       - name: Run sqlcmd
-        run: sqlcmd -S localhost,1454 -U sa -P c0MplicatedP@ssword -d tempdb -Q "SELECT @@version;"
+        run: sqlcmd -S localhost,1436 -U sa -P c0MplicatedP@ssword -d tempdb -Q "SELECT @@version;"

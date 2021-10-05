@@ -2,7 +2,8 @@ param (
    [ValidateSet("sqlclient","sqlpackage", "sqlengine", "localdb")]
    [string[]]$Install,
    [string]$SaPassword,
-   [switch]$ShowLog
+   [switch]$ShowLog,
+   [string]$Port
 )
 
 if ("sqlengine" -in $Install) {
